@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Player.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="FirstName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Kendall</Value>
+    </Setting>
+    <Setting Name="LastName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Spackman</Value>
+    </Setting>
+    <Setting Name="ANumber" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">A01234983</Value>
+    </Setting>
+    <Setting Name="Alias" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">K-Fire</Value>
+    </Setting>
+    <Setting Name="ProcessLabel" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Kendall's Player</Value>
+    </Setting>
+    <Setting Name="RegistryEndPoint" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">127.0.0.1:12000</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

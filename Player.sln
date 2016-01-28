@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messages", "..\cs5200s16-shared\DSoak\Messages\Messages.csproj", "{9659277F-710A-4E0B-AC2B-12882AAC247D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedObjects", "..\cs5200s16-shared\DSoak\SharedObjects\SharedObjects.csproj", "{67FEA8D0-4871-49D4-AA38-217F63934D26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Player", "Player\Player.csproj", "{9AD55C75-1318-4C73-A6D7-198D99A4BEA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayerTesting", "PlayerTesting\PlayerTesting.csproj", "{CEA687DB-562F-46A6-922A-C83AFB8D2492}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9659277F-710A-4E0B-AC2B-12882AAC247D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9659277F-710A-4E0B-AC2B-12882AAC247D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9659277F-710A-4E0B-AC2B-12882AAC247D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9659277F-710A-4E0B-AC2B-12882AAC247D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67FEA8D0-4871-49D4-AA38-217F63934D26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67FEA8D0-4871-49D4-AA38-217F63934D26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67FEA8D0-4871-49D4-AA38-217F63934D26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67FEA8D0-4871-49D4-AA38-217F63934D26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AD55C75-1318-4C73-A6D7-198D99A4BEA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AD55C75-1318-4C73-A6D7-198D99A4BEA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AD55C75-1318-4C73-A6D7-198D99A4BEA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AD55C75-1318-4C73-A6D7-198D99A4BEA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEA687DB-562F-46A6-922A-C83AFB8D2492}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEA687DB-562F-46A6-922A-C83AFB8D2492}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEA687DB-562F-46A6-922A-C83AFB8D2492}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEA687DB-562F-46A6-922A-C83AFB8D2492}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

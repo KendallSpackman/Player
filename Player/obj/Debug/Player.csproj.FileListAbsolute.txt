@@ -1,0 +1,11 @@
+C:\Users\Kendall\Desktop\CS5200\Player\Player\bin\Debug\Player.exe.config
+C:\Users\Kendall\Desktop\CS5200\Player\Player\bin\Debug\Player.exe
+C:\Users\Kendall\Desktop\CS5200\Player\Player\bin\Debug\Player.pdb
+C:\Users\Kendall\Desktop\CS5200\Player\Player\bin\Debug\log4net.dll
+C:\Users\Kendall\Desktop\CS5200\Player\Player\bin\Debug\Messages.dll
+C:\Users\Kendall\Desktop\CS5200\Player\Player\bin\Debug\SharedObjects.dll
+C:\Users\Kendall\Desktop\CS5200\Player\Player\bin\Debug\Messages.pdb
+C:\Users\Kendall\Desktop\CS5200\Player\Player\bin\Debug\SharedObjects.pdb
+C:\Users\Kendall\Desktop\CS5200\Player\Player\obj\Debug\Player.csprojResolveAssemblyReference.cache
+C:\Users\Kendall\Desktop\CS5200\Player\Player\obj\Debug\Player.exe
+C:\Users\Kendall\Desktop\CS5200\Player\Player\obj\Debug\Player.pdb

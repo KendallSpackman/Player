@@ -1,0 +1,12 @@
+C:\Users\Kendall\Desktop\CS5200\Player\PlayerTesting\obj\Release\PlayerTesting.csprojResolveAssemblyReference.cache
+C:\Users\Kendall\Desktop\CS5200\Player\PlayerTesting\bin\Release\PlayerTesting.dll
+C:\Users\Kendall\Desktop\CS5200\Player\PlayerTesting\bin\Release\PlayerTesting.pdb
+C:\Users\Kendall\Desktop\CS5200\Player\PlayerTesting\bin\Release\Messages.dll
+C:\Users\Kendall\Desktop\CS5200\Player\PlayerTesting\bin\Release\Player.exe
+C:\Users\Kendall\Desktop\CS5200\Player\PlayerTesting\bin\Release\SharedObjects.dll
+C:\Users\Kendall\Desktop\CS5200\Player\PlayerTesting\bin\Release\log4net.dll
+C:\Users\Kendall\Desktop\CS5200\Player\PlayerTesting\bin\Release\Messages.pdb
+C:\Users\Kendall\Desktop\CS5200\Player\PlayerTesting\bin\Release\SharedObjects.pdb
+C:\Users\Kendall\Desktop\CS5200\Player\PlayerTesting\bin\Release\Player.pdb
+C:\Users\Kendall\Desktop\CS5200\Player\PlayerTesting\obj\Release\PlayerTesting.dll
+C:\Users\Kendall\Desktop\CS5200\Player\PlayerTesting\obj\Release\PlayerTesting.pdb

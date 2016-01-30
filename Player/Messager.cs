@@ -4,9 +4,11 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 
+using log4net;
 using Messages;
 using Messages.RequestMessages;
 using Messages.ReplyMessages;
@@ -16,55 +18,58 @@ namespace Player
 {
     public class Messager
     {
-        private static object myLock = new object();
-        private static Messager messager;
-        private static UdpClient udpClient;
-        public bool Running { get; set; }
+        private static readonly ILog logger = LogManager.GetLogger(typeof(Messager));
+        private object myLock = new object();
+        private UdpClient udpClient;
+        private bool keepGoing;
         public ConcurrentQueue<Message> Queue { get; private set; }
+        public IPEndPoint EndPoint { get; private set; }
 
-        private Messager()
+        public Messager()
         {
-            Running = true;
+            keepGoing = true;
             udpClient = new UdpClient(0);
+            EndPoint = (IPEndPoint)udpClient.Client.LocalEndPoint;
             Queue = new ConcurrentQueue<Message>();
-        }
-        public static Messager Instance()
-        {
-            if (messager == null)
-            {
-                lock (myLock)
-                {
-                    if (messager == null)
-                    {
-                        messager = new Messager();
-                    }
-                }
-            }
-            return messager;
         }
 
         public void Send(Message message, PublicEndPoint ep)
         {
-            byte[] bytes = message.Encode();
-            udpClient.Send(bytes, bytes.Length, ep.IPEndPoint);
+            try
+            {
+                byte[] bytes = message.Encode();
+                udpClient.Send(bytes, bytes.Length, ep.IPEndPoint);
+            } catch (Exception e)
+            {
+                logger.Debug("Exception: " + e.Message);
+            }
         }
 
-        // Need to thread. Sender/Receiver?
-        // Observer pattern?
         public void Receive()
         {
-            //Wait for response
             IPEndPoint receiveEp = new IPEndPoint(IPAddress.Any, 0); //Receive from anyone - 0.0.0.0
 
-            while (Running)
+            while (keepGoing)
             {
-                byte[] bytes = udpClient.Receive(ref receiveEp);
-                if (bytes != null)
+                try
                 {
-                    Message msg = Message.Decode(bytes);
-                    Queue.Enqueue(msg);
+                    byte[] bytes = udpClient.Receive(ref receiveEp);
+                    if (bytes != null)
+                    {
+                        Message msg = Message.Decode(bytes);
+                        Queue.Enqueue(msg);
+                    }
+                } catch (Exception e)
+                {
+                    logger.Debug("Exception: " + e.Message);
                 }
             }
+        }
+
+        public void Stop()
+        {
+            keepGoing = false;
+            udpClient.Close();
         }
     }
 }

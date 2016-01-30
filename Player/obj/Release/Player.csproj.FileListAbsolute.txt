@@ -9,3 +9,8 @@ C:\Users\Kendall\Desktop\CS5200\Player\Player\bin\Release\SharedObjects.pdb
 C:\Users\Kendall\Desktop\CS5200\Player\Player\obj\Release\Player.csprojResolveAssemblyReference.cache
 C:\Users\Kendall\Desktop\CS5200\Player\Player\obj\Release\Player.exe
 C:\Users\Kendall\Desktop\CS5200\Player\Player\obj\Release\Player.pdb
+C:\Users\Kendall\Desktop\CS5200\Player\Player\obj\Release\Player.PlayerUI.resources
+C:\Users\Kendall\Desktop\CS5200\Player\Player\obj\Release\Player.csproj.GenerateResource.Cache
+C:\Users\Kendall\Desktop\CS5200\Player\Player\bin\Release\ManyConsole.dll
+C:\Users\Kendall\Desktop\CS5200\Player\Player\bin\Release\NDesk.Options.dll
+C:\Users\Kendall\Desktop\CS5200\Player\Player\bin\Release\ManyConsole.pdb

@@ -50,8 +50,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="LoginTester.cs" />
+    <Compile Include="LoginStateTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GetGamesStateTester.cs" />
+    <Compile Include="TestablePlayer.cs" />
+    <Compile Include="JoinGameStateTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\cs5200s16-shared\DSoak\Messages\Messages.csproj">

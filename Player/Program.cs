@@ -5,22 +5,30 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
+using System.Windows.Forms;
 
+using log4net;
+using log4net.Config;
 using SharedObjects;
 
 namespace Player
 {
     class Program
     {
+        private static readonly ILog logger = LogManager.GetLogger(typeof(Program));
         static void Main(string[] args)
         {
-            Processor processor = Processor.Instance();
-            Messager messager = Messager.Instance();
-            processor.Queue = messager.Queue;
-            Thread messagerThread = new Thread(
-                new ThreadStart(Messager.Instance().Receive));
-            messagerThread.Start();
+            // Setup up logging with log4net
+            XmlConfigurator.Configure();
 
+            string ep = Properties.Settings.Default.RegistryEndPoint;
+            if (args.Length > 0)
+            {
+                if (args[0].ToLower().Contains("local"))
+                {
+                    ep = Properties.Settings.Default.LocalRegistryEndPoint;
+                }
+            }
             Player player = new Player()
             {
                 IdentityInfo = new IdentityInfo()
@@ -33,22 +41,19 @@ namespace Player
                 ProcessLabel = Properties.Settings.Default.ProcessLabel,
                 RegistryEndPoint = new PublicEndPoint()
                 {
-                    HostAndPort = Properties.Settings.Default.RegistryEndPoint
+                    HostAndPort = ep
                 }
             };
-            Processor.Instance().Player = player;
+            
+            logger.Debug("Starting player");
+            Thread playerThread = new Thread(new ThreadStart(player.Start));
+            playerThread.Start();
 
-            Thread processorThread = new Thread(
-                new ThreadStart(Processor.Instance().Run));
-            processorThread.Start();
+            PlayerUI ui = new PlayerUI(player);
+            Application.Run(ui);
 
-            Console.Write("Run");
-            player.Run();
-
-            Console.WriteLine("Press any key to stop player ...");
-            Console.ReadKey(true);
-            Console.Write("Stop");
             player.Stop();
+            playerThread.Join();
         }
     }
 }

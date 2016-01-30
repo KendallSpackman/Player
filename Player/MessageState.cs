@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using Messages;
 using Messages.RequestMessages;
 using Messages.ReplyMessages;
+using SharedObjects;
 
 namespace Player
 {
-    abstract class MessageState : State
+    public abstract class MessageState : State
     {
         protected int tries = 0;
         protected int maxTries = Player.retries;
@@ -29,33 +30,41 @@ namespace Player
         {
             if (!requestSent && tries < maxTries)
             {
-                logDebug("Login attempt number " + tries);
+                LogDebug(GetAttemptMessage());
 
-                Request request = createRequest();
-                Messager.Instance().Send(request, player.RegistryEndPoint);
+                player.Messager.Send(CreateRequest(), GetEndPoint());
                 requestSent = true;
                 ++tries;
-                stopwatch.Restart();
+                stopwatch.Start();
             }
             else if (replyReceived)
             {
                 stopwatch.Stop();
-                player.ChangeState(nextState());
+                stopwatch.Reset();
+                player.ChangeState(NextState());
             }
             else if (stopwatch.Elapsed.CompareTo(Player.timeout) >= 0)
             {
-                logInfo("Timer timed out waiting for response");
+                LogInfo("Timer timed out waiting for response");
                 stopwatch.Stop();
+                stopwatch.Reset();
                 requestSent = false;
             }
+            // TODO: Do something if all tries expended.
         }
 
-        public Request createRequest();
+        public abstract void Receive(Message message);
 
-        public void logDebug(string msg);
+        protected abstract Request CreateRequest();
 
-        public void logInfo(string msg);
+        protected abstract PublicEndPoint GetEndPoint();
 
-        public State nextState();
+        protected abstract void LogDebug(string msg);
+
+        protected abstract void LogInfo(string msg);
+
+        protected abstract string GetAttemptMessage();
+
+        protected abstract State NextState();
     }
 }

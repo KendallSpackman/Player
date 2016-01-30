@@ -9,3 +9,5 @@ C:\Users\Kendall\Desktop\CS5200\Player\Player\bin\Debug\SharedObjects.pdb
 C:\Users\Kendall\Desktop\CS5200\Player\Player\obj\Debug\Player.csprojResolveAssemblyReference.cache
 C:\Users\Kendall\Desktop\CS5200\Player\Player\obj\Debug\Player.exe
 C:\Users\Kendall\Desktop\CS5200\Player\Player\obj\Debug\Player.pdb
+C:\Users\Kendall\Desktop\CS5200\Player\Player\obj\Debug\Player.PlayerUI.resources
+C:\Users\Kendall\Desktop\CS5200\Player\Player\obj\Debug\Player.csproj.GenerateResource.Cache

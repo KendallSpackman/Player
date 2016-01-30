@@ -18,6 +18,9 @@
       <Value Profile="(Default)">Kendall's Player</Value>
     </Setting>
     <Setting Name="RegistryEndPoint" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">52.3.213.61:12000</Value>
+    </Setting>
+    <Setting Name="LocalRegistryEndPoint" Type="System.String" Scope="Application">
       <Value Profile="(Default)">127.0.0.1:12000</Value>
     </Setting>
   </Settings>

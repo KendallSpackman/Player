@@ -89,6 +89,8 @@
             this.Controls.Add(this.label1);
             this.Name = "PlayerUI";
             this.Text = "PlayerUI";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PlayerUI_FormClosing);
+            this.Load += new System.EventHandler(this.PlayerUI_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

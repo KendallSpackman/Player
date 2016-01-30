@@ -70,10 +70,19 @@ namespace Player.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1:12000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("52.3.213.61:12000")]
         public string RegistryEndPoint {
             get {
                 return ((string)(this["RegistryEndPoint"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1:12000")]
+        public string LocalRegistryEndPoint {
+            get {
+                return ((string)(this["LocalRegistryEndPoint"]));
             }
         }
     }

@@ -12,24 +12,51 @@ namespace Player
 {
     public partial class PlayerUI : Form
     {
-        public PlayerUI()
+
+        private Player player;
+        private bool doUpdate = false;
+
+        public PlayerUI(Player player)
         {
             InitializeComponent();
+            this.player = player;
+            player.PlayerUpdate += UpdateDisplay;
         }
 
-        public void setProcessLabel(string processID)
+        public void UpdateDisplay()
         {
-            label3.Text = processID;
+            doUpdate = true;
         }
 
-        public void setPublicEndPoint(string endPoint)
+        private void UpdateDisplay(object sender, EventArgs e)
         {
-            label4.Text = endPoint;
+            if (doUpdate)
+            {
+                doUpdate = false;
+                if (player.ProcessLabel != null)
+                    label3.Text = player.ProcessLabel;
+                if (player.ProcessInfo != null)
+                {
+                    if (player.ProcessInfo.EndPoint != null)
+                    {
+                        label4.Text = player.ProcessInfo.EndPoint.HostAndPort;
+                    }
+                    label5.Text = player.ProcessInfo.StatusString;
+                }
+            }
         }
 
-        public void setStatus(string status)
+        private void PlayerUI_FormClosing(object sender, FormClosingEventArgs e)
         {
-            label5.Text = status;
+            player.PlayerUpdate -= UpdateDisplay;
+        }
+
+        private void PlayerUI_Load(object sender, EventArgs e)
+        {
+            Timer Timer = new Timer();
+            Timer.Interval = (1000);
+            Timer.Tick += new EventHandler(UpdateDisplay);
+            Timer.Start();
         }
     }
 }

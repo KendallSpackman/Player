@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-//using System.Diagnostics;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -16,70 +17,57 @@ namespace Player
 {
     public class Player
     {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(Player));
-        private object myLock = new object();
-        public static readonly TimeSpan timeout = new TimeSpan(0, 0, 10);
-        public static readonly int retries = 3;
-        private bool keepRunning = true;
-        private PlayerUI ui;
-        private State currentState;
         public string ProcessLabel { get; set; }
         public IdentityInfo IdentityInfo { get; set; }
         public ProcessInfo ProcessInfo { get; set; }
         public GameInfo[] GamesList { get; set; }
         public int LifePoints { get; set; }
         public PublicEndPoint RegistryEndPoint { get; set; }
+        public Messager Messager { get; private set; }
+
+        public delegate void PlayerUpdateHandler();
+        public event PlayerUpdateHandler PlayerUpdate;
+
+        private static readonly ILog logger = LogManager.GetLogger(typeof(Player));
+        private object myLock = new object();
+        public static readonly TimeSpan timeout = new TimeSpan(0, 0, 10);
+        public static readonly int retries = 3;
+        private bool keepRunning = true;
+        protected State currentState;
+        private Thread messagerThread;
+        private ConcurrentQueue<Messages.Message> messageQueue;
+
+        private static Dictionary<Type, int> typeDict = new Dictionary<Type, int>
+        {
+            {typeof(GameListReply),0}, {typeof(JoinGameReply),1},
+            {typeof(LoginReply),2}, {typeof(AliveRequest),3}
+        };
 
         public Player()
         {
-            ui = new PlayerUI();
-            ui.setProcessLabel(ProcessLabel);
             currentState = new LoginState(this);
+            ProcessInfo = new ProcessInfo();
+            ProcessInfo.Status = ProcessInfo.StatusCode.NotInitialized;
+            Messager = new Messager();
+            messageQueue = Messager.Queue;
+            messagerThread = new Thread(
+                new ThreadStart(Messager.Receive));
+            messagerThread.Start();
         }
 
-        public void Run()
+        public void Start()
         {
-            bool success = true;
-            int tries;
             while (keepRunning)
             {
+                ProcessMessages();
+
                 currentState.PerformAction();
-                //if (ProcessInfo == null)
-                //{
-                //    success = false;
-                //    tries = 0;
-                //    while (!success && tries < retries)
-                //    {
-                //        Login();
-                //        success = WaitLoginReply();
-                //        ++tries;
-                //    }
-                //}
-                //if (!success) return;
-
-                //if (ProcessInfo.Status == ProcessInfo.StatusCode.Registered)
-                //{
-                //    success = false;
-                //    tries = 0;
-                //    while (!success && tries < retries)
-                //    {
-                //        GetGamesList();
-                //        success = WaitGamesListReply();
-                //        ++tries;
-                //    }
-                //    if (!success) return;
-
-                //    success = false;
-                //    tries = 0;
-                //    while (!success && tries < GamesList.Length)
-                //    {
-                //        JoinGame(GamesList[tries]);
-                //        success = WaitJoinGameReply();
-                //        ++tries;
-                //    }
-                //}
-
-                //UpdateUi();
+                
+                if (PlayerUpdate != null)
+                {
+                    PlayerUpdate();
+                }
+                Thread.Sleep(100);
             }
             Logout();
             WaitLogoutReply();
@@ -88,115 +76,23 @@ namespace Player
         public void Stop()
         {
             keepRunning = false;
+            Messager.Stop();
+            messagerThread.Join();
         }
 
-        private void UpdateUi()
+        public void ChangeState(State newState)
         {
+            currentState = newState;
         }
 
-        //public bool WaitLoginReply()
-        //{
-        //    Stopwatch stopwatch = new Stopwatch();
-        //    stopwatch.Start();
-        //    bool wait = true;
-        //    while (wait)
-        //    {
-        //        Thread.Sleep(300);
-        //        lock (myLock)
-        //        {
-        //            if (ProcessInfo != null)
-        //                wait = false;
-        //        }
-        //        if (stopwatch.Elapsed.CompareTo(timeout) >= 0)
-        //            wait = false;
-        //    }
-        //    stopwatch.Stop();
-        //    if (ProcessInfo != null)
-        //        return true;
-        //    else return false;
-        //}
-
-        //public void GetGamesList()
-        //{
-        //    logger.Debug("Attempting to request games list.");
-        //    GameListRequest gameListRequest = new GameListRequest()
-        //    {
-        //        StatusFilter = (int)GameInfo.StatusCode.Available
-        //    };
-        //    Messager.Instance().Send(gameListRequest, RegistryEndPoint);
-        //}
-
-        public bool WaitGamesListReply()
-        {
-            //Stopwatch stopwatch = new Stopwatch();
-            //stopwatch.Start();
-            //bool wait = true;
-            //while (wait)
-            //{
-            //    Thread.Sleep(300);
-            //    lock (myLock)
-            //    {
-            //        if (GamesList != null)
-            //            wait = false;
-            //    }
-            //    if (stopwatch.Elapsed.CompareTo(timeout) >= 0)
-            //    {
-            //        logger.Info("Timer timed out waiting for response");
-            //        wait = false;
-            //    }
-            //}
-            //stopwatch.Stop();
-            //if (GamesList != null)
-            //    return true;
-            //else return false;
-        }
-
-        public void JoinGame(GameInfo game)
-        {
-            logger.Debug("Attempting to join game.");
-            if (joinedGame)
-                logger.Warn("Already joined a game.");
-            JoinGameRequest joinGameRequest = new JoinGameRequest()
-            {
-                GameId = game.GameId,
-                Player = ProcessInfo
-            };
-            Messager.Instance().Send(joinGameRequest, game.GameManager.EndPoint);
-        }
-
-        public bool WaitJoinGameReply()
-        {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            bool wait = true;
-            while (wait)
-            {
-                Thread.Sleep(300);
-                lock (myLock)
-                {
-                    if (joinedGame)
-                        wait = false;
-                }
-                if (stopwatch.Elapsed.CompareTo(timeout) >= 0)
-                {
-                    logger.Info("Timer timed out waiting for response");
-                    wait = false;
-                }
-            }
-            stopwatch.Stop();
-            if (joinedGame)
-                return true;
-            else return false;
-        }
-
-        public void Logout()
+        private void Logout()
         {
             logger.Debug("Attempting to log out.");
             LogoutRequest logoutRequest = new LogoutRequest();
-            Messager.Instance().Send(logoutRequest, RegistryEndPoint);
+            Messager.Send(logoutRequest, RegistryEndPoint);
         }
 
-        public bool WaitLogoutReply()
+        private bool WaitLogoutReply()
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -221,18 +117,58 @@ namespace Player
             else return false;
         }
 
-        public void Receive(LoginReply reply)
+        private void ProcessMessages()
         {
-            logger.Debug("Received Login Reply.");
+            Messages.Message message;
+            bool success = true;
+            while (success)
+            {
+                success = messageQueue.TryDequeue(out message);
+                if (success)
+                    Receive(message);
+            }
+        }
+
+        private void Receive(Messages.Message message)
+        {
+            try
+            {
+                switch (typeDict[message.GetType()])
+                {
+                    case 0:
+                        Receive(message as GameListReply);
+                        break;
+                    case 1:
+                        Receive(message as JoinGameReply);
+                        break;
+                    case 2:
+                        Receive(message as LoginReply);
+                        break;
+                    case 3:
+                        Receive(message as AliveRequest);
+                        break;
+                    default:
+                        return;
+                }
+                currentState.Receive(message);
+            } catch (KeyNotFoundException)
+            {
+                logger.Debug("Unknown message received.");
+            }
+        }
+
+        private void Receive(LoginReply reply)
+        {
+            logger.Debug("Received Login Reply");
             if (reply.Success)
                 ProcessInfo = reply.ProcessInfo;
             else
                 logger.Error(reply.Note);
         }
 
-        public void Receive(GameListReply reply)
+        private void Receive(GameListReply reply)
         {
-            logger.Debug("Received Game List Reply.");
+            logger.Debug("Received Game List Reply");
             if (reply.Success)
             {
                 GamesList = reply.GameInfo;
@@ -241,12 +177,11 @@ namespace Player
                 logger.Error(reply.Note);
         }
    
-        public void Receive(JoinGameReply reply)
+        private void Receive(JoinGameReply reply)
         {
-            logger.Debug("Received Join Game Reply.");
+            logger.Debug("Received Join Game Reply");
             if (reply.Success)
             {
-                joinedGame = true;
                 LifePoints = reply.InitialLifePoints;
             }
             else
@@ -255,24 +190,20 @@ namespace Player
 
         public void Receive(AliveRequest request)
         {
-            logger.Debug("Received Alive Request.");
+            logger.Debug("Received Alive Request");
             Reply reply = new Reply()
             {
                 Success = true,
                 Note = "I'm alive!"
             };
-            Messager.Instance().Send(reply, RegistryEndPoint);
+            logger.Debug("Sending Alive Reply");
+            Messager.Send(reply, RegistryEndPoint);
         }
 
-        public void Receive(Reply reply)
+        private void Receive(Reply reply)
         {
-            logger.Debug("Received Logout Reply.");
+            logger.Debug("Received Logout Reply");
             ProcessInfo = null;
-        }
-
-        public void ChangeState(State newState)
-        {
-            currentState = newState;
         }
     }
 }

@@ -8,10 +8,10 @@ using Messages;
 
 namespace Player
 {
-    interface State
+    public interface State
     {
-        public void PerformAction();
+        void PerformAction();
 
-        public void Receive(Message message);
+        void Receive(Message message);
     }
 }

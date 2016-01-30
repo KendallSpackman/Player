@@ -12,46 +12,61 @@ using SharedObjects;
 
 namespace Player
 {
-    class JoinGameState : MessageState
+    public class JoinGameState : MessageState
     {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(GetGamesState));
+        private static readonly ILog logger = LogManager.GetLogger(typeof(JoinGameState));
 
         public JoinGameState(Player player) : base(player)
         {
             maxTries = player.GamesList.Length;
         }
-    
-        public void Receive(Message message)
+
+        public override void Receive(Message message)
         {
             if (message is JoinGameReply)
             {
                 replyReceived = true;
+                player.ProcessInfo.Status = ProcessInfo.StatusCode.JoinedGame;
             }
         }
 
-        public Request createRequest()
+        protected override Request CreateRequest()
         {
+            LogDebug("Sending Join Game Request");
             JoinGameRequest request = new JoinGameRequest()
             {
                 GameId = player.GamesList[tries].GameId,
                 Player = player.ProcessInfo
             };
+            player.ProcessInfo.Status = ProcessInfo.StatusCode.JoiningGame;
             return request;
         }
 
-        public void logDebug(string msg)
+        protected override PublicEndPoint GetEndPoint()
+        {
+            return player.GamesList[tries].GameManager.EndPoint;
+        }
+
+        protected override void LogDebug(string msg)
         {
             logger.Debug(msg);
         }
 
-        public void logInfo(string msg)
+        protected override void LogInfo(string msg)
         {
             logger.Info(msg);
         }
 
-        public State nextState()
+        protected override string GetAttemptMessage()
         {
-            return new JoinGameState(player);
+            return "Join game attempt number " + tries;
+        }
+
+        protected override State NextState()
+        {
+            // For HW1, there is nothing to do after joining a game, so enter a null state
+            // Should be replaced in further assignments
+            return new NullState(player);
         }
     }
 }

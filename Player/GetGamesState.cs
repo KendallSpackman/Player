@@ -13,15 +13,15 @@ using SharedObjects;
 
 namespace Player
 {
-    class GetGamesState : MessageState
+    public class GetGamesState : MessageState
     {
         private static readonly ILog logger = LogManager.GetLogger(typeof(GetGamesState));
 
         public GetGamesState(Player player) : base(player)
         {
         }
-    
-        public void Receive(Message message)
+
+        public override void Receive(Message message)
         {
             if (message is GameListReply)
             {
@@ -29,8 +29,9 @@ namespace Player
             }
         }
 
-        public Request createRequest()
+        protected override Request CreateRequest()
         {
+            LogDebug("Sending Game List Request");
             GameListRequest request = new GameListRequest()
             {
                 StatusFilter = (int)GameInfo.StatusCode.Available
@@ -38,17 +39,27 @@ namespace Player
             return request;
         }
 
-        public void logDebug(string msg)
+        protected override PublicEndPoint GetEndPoint()
+        {
+            return player.RegistryEndPoint;
+        }
+
+        protected override void LogDebug(string msg)
         {
             logger.Debug(msg);
         }
 
-        public void logInfo(string msg)
+        protected override void LogInfo(string msg)
         {
             logger.Info(msg);
         }
 
-        public State nextState()
+        protected override string GetAttemptMessage()
+        {
+            return "Get games attempt number " + tries;
+        }
+
+        protected override State NextState()
         {
             return new JoinGameState(player);
         }

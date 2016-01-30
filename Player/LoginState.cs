@@ -13,15 +13,15 @@ using SharedObjects;
 
 namespace Player
 {
-    class LoginState : MessageState
+    public class LoginState : MessageState
     {
         private static readonly ILog logger = LogManager.GetLogger(typeof(LoginState));
 
         public LoginState(Player player) : base(player)
         {
         }
-    
-        public void Receive(Message message)
+
+        public override void Receive(Message message)
         {
             if (message is LoginReply)
             {
@@ -29,28 +29,40 @@ namespace Player
             }
         }
 
-        public Request createRequest()
+        protected override Request CreateRequest()
         {
+            LogDebug("Sending Login Request");
             LoginRequest loginRequest = new LoginRequest()
             {
                 Identity = player.IdentityInfo,
                 ProcessLabel = player.ProcessLabel,
                 ProcessType = ProcessInfo.ProcessType.Player
             };
+            player.ProcessInfo.Status = ProcessInfo.StatusCode.Initializing;
             return loginRequest;
         }
 
-        public void logDebug(string msg)
+        protected override PublicEndPoint GetEndPoint()
+        {
+            return player.RegistryEndPoint;
+        }
+
+        protected override void LogDebug(string msg)
         {
             logger.Debug(msg);
         }
 
-        public void logInfo(string msg)
+        protected override void LogInfo(string msg)
         {
             logger.Info(msg);
         }
 
-        public State nextState()
+        protected override string GetAttemptMessage()
+        {
+            return "Login attempt number " + tries;
+        }
+
+        protected override State NextState()
         {
             return new GetGamesState(player);
         }
